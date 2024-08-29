@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Starred - Google Drive Clone{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2.5rem;">
+    <h1>Starred</h1>
+    <div class="row">
+        {% for folder in folders %}
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ folder.name }}</h5>
+                        <p class="card-text">Starred Folder</p>
+                        <a href="#" class="btn btn-sm btn-primary">Open</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% for file in files %}
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ file.name }}</h5>
+                        <p class="card-text">Starred File</p>
+                        <a href="{{ file.file.url }}" class="btn btn-sm btn-primary" target="_blank">Open</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

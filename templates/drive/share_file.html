@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Share File - Google Drive Clone{% endblock %}
+
+{% block content %}
+    <h1>Share File: {{ file.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username to share with:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Share</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Spam - Google Drive Clone{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2.5rem;"></div>
+    <h1>Spam</h1>
+    <div class="row">
+        {% for file in files %}
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ file.name }}</h5>
+                        <p class="card-text">Spam File</p>
+                        <a href="#" class="btn btn-sm btn-primary">Not Spam</a>
+                        <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

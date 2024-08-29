@@ -1,0 +1,101 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Shared with Me - Google Drive Clone{% endblock %}
+
+{% block content %}
+<style>
+    .card {
+        background-color: #fdce4a;
+        color: #333;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .card .card-body {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card .card-title {
+        font-size: 1.25rem;
+        margin: 10px 0;
+    }
+
+    .card .card-text {
+        font-size: 0.875rem;
+        color: #666;
+    }
+
+    .card .btn-primary {
+        background-color: #21a363;
+        border-color: #21a363;
+        color: #fff;
+        font-size: 0.875rem;
+    }
+
+    .card .btn-secondary {
+        background-color: #498af4;
+        border-color: #498af4;
+        color: #fff;
+        font-size: 0.875rem;
+    }
+
+    .card .btn-primary:hover,
+    .card .btn-secondary:hover {
+        opacity: 0.9;
+        text-decoration: none;
+    }
+
+    .bi {
+        color: #498af4;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    @media (max-width: 768px) {
+        .card .card-title {
+            font-size: 1.1rem;
+        }
+
+        .card .card-text {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+<div class="container" style="margin-top: 2.5rem;">
+    <h1>Shared with Me</h1>
+    <div class="row">
+        {% for shared_folder in shared_folders %}
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ shared_folder.folder.name }}</h5>
+                    <p class="card-text">Shared Folder</p>
+                    <a href="#" class="btn btn-sm btn-primary">Open</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% for shared_file in shared_files %}
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ shared_file.file.name }}</h5>
+                    <p class="card-text">Shared File</p>
+                    <a href="{{ shared_file.file.file.url }}" class="btn btn-sm btn-primary" target="_blank">Open</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

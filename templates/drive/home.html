@@ -1,0 +1,275 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Home - Google Drive Clone{% endblock %}
+
+{% block content %}
+<style>
+    /* General Styling */
+    body {
+        background-color: #f1f3f4;
+        font-family: Arial, sans-serif;
+        color: #202124;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 0.875rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #f1f3f4;
+        color: #202124;
+        border: 1px solid #ddd;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Card Styling */
+    .card {
+        background-color: white;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .card-body svg {
+        margin-bottom: 10px;
+        fill: #1a73e8;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+        margin: 0;
+        color: #202124;
+    }
+
+    .card-text {
+        font-size: 0.875rem;
+        color: #5f6368;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Dropdown Menu */
+    .three-dot-menu {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+        display: none;
+        background-color: #f8f6f6;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        min-width: 200px;
+        z-index: 1000;
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu button {
+        display: block;
+        padding: 12px 16px;
+        color: #202124;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+        background-color: #f1f3f4;
+    }
+
+    .dropdown-menu a svg,
+    .dropdown-menu button svg {
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    .dropdown-menu .btn-danger {
+        color: #ff0000;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1rem;
+        }
+
+        .card-text {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+
+
+<div class="container mt-5">
+    <h1 class="mb-4">My Drive</h1>
+    <div class="mb-4">
+        <a href="{% url 'upload_file' %}" class="btn btn-primary me-2">Upload File</a>
+        <a href="{% url 'create_folder' %}" class="btn btn-secondary">Create Folder</a>
+    </div>
+    <section>
+        <div class="row">
+            {% for folder in folders %}
+            <div class="col-md-3 mb-4">
+                <div class="card" onclick="window.location.href='{{ folder.folder.url }}'">
+                    <div class="card-body">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
+                            fill="#DA954B">
+                            <path
+                                d="M140-160q-23 0-41.5-18.5T80-220v-520q0-23 18.5-41.5T140-800h281l60 60h339q23 0 41.5 18.5T880-680H455l-60-60H140v520l102-400h698L833-206q-6 24-22 35t-41 11H140Zm63-60h572l84-340H287l-84 340Zm0 0 84-340-84 340Zm-63-460v-60 60Z" />
+                        </svg>
+                        <h5 class="card-title">{{ folder.name }}</h5>
+                        <div class="three-dot-menu" onclick="toggleDropdown(event, '{{ folder.id }}')">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </div>
+                        <div id="dropdown-{{ folder.id }}" class="dropdown-menu">
+                            <a href="{{ folder.folder.url }}"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                    viewBox="http://www.w3.org/2000/svg" width="24px" fill="#000000">
+                                    <path
+                                        d="M480-80 310-250l57-57 73 73v-206H235l73 72-58 58L80-480l169-169 57 57-72 72h206v-206l-73 73-57-57 170-170 170 170-57 57-73-73v206h205l-73-72 58-58 170 170-170 170-57-57 73-73H520v205l72-73 58 58L480-80Z" />
+                                </svg> Open</a>
+                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                    viewBox="http://www.w3.org/2000/svg" width="24px" fill="#000000">
+                                    <path
+                                        d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                                </svg> Download</a>
+                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                    viewBox="http://www.w3.org/2000/svg" width="24px" fill="#000000">
+                                    <path
+                                        d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" />
+                                </svg> Rename</a>
+                            <a href="{% url 'share_folder' folder.id %}"><svg xmlns="http://www.w3.org/2000/svg"
+                                    height="24px" viewBox="http://www.w3.org/2000/svg" width="24px" fill="#000000">
+                                    <path
+                                        d="M680-80q-50 0-85-35t-35-85q0-6 3-28L282-392q-16 15-37 23.5t-45 8.5q-50 0-85-35t-35-85q0-50 35-85t85-35q24 0 45 8.5t37 23.5l281-164q-2-7-2.5-13.5T560-760q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35q-24 0-45-8.5T598-672L317-508q2 7 2.5 13.5t.5 14.5q0 8-.5 14.5T317-452l281 164q16-15 37-23.5t45-8.5q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-200q0-17-11.5-28.5T680-240q-17 0-28.5 11.5T640-200q0 17 11.5 28.5T680-160ZM200-440q17 0 28.5-11.5T240-480q0-17-11.5-28.5T200-520q-17 0-28.5 11.5T160-480q0 17 11.5 28.5T200-440Zm480-280q17 0 28.5-11.5T720-760q0-17-11.5-28.5T680-800q-17 0-28.5 11.5T640-760q0 17 11.5 28.5T680-720Zm0 520ZM200-480Zm480-280Z" />
+                                </svg> Share</a>
+                            <form method="POST" action="{% url 'move_to_trash_folder' folder.id %}"
+                                style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item"
+                                    style="background: none; border: none; color: #ff0000; cursor: pointer;">Move to
+                                    Trash</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </section>
+    <section>
+        {% for file in files %}
+        <div class="col-md-3 mb-4">
+            <div class="card" onclick="window.location.href='{{ file.url }}'">
+                <div class="card-body">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px"
+                        fill="#DA954B">
+                        <path
+                            d="M5 20h14v-2H5v2Zm14-4h-2v-6h-4v6H7v-6H5v6H3v-8h6V8H3V6h4V4h4v2h4V4h2v8h4v8Zm-2-8h-2V8h-4v4H7v2h4v4h4v-4h2v-2Z" />
+                    </svg>
+                    <h5 class="card-title">{{ file.name }}</h5>
+                    <div class="three-dot-menu" onclick="toggleDropdown(event, '{{ file.id }}')">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </div>
+                    <div id="dropdown-{{ file.id }}" class="dropdown-menu">
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                width="24px" fill="#000000">
+                                <path
+                                    d="M14 2H4v16h16V4h-6l-4-4ZM4 0h12l4 4h-6V2H4v14h14v2H2V4h2V0Zm0 16v2h12v-2H4Zm0 2h12v-2H4v2Z" />
+                            </svg> Open</a>
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                width="24px" fill="#000000">
+                                <path
+                                    d="M21 8h-2V4H5v4H3v14h18V8Zm-4 0V6h-6v2h-2V4h2v2h4V4h2v4Zm-2 6H5v-4h10v4Zm4 6H5v-2h12v2Zm-6-6H7v-4h8v4Zm-1 6H8v-2h2v2Zm4-12h-2V6h2v2Z" />
+                            </svg> Download</a>
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                width="24px" fill="#000000">
+                                <path
+                                    d="M12 15v3h-3v-3H6v-3h3v-3h3v3h3v3h-3Zm0-5h-3V7h3v3Zm0 12H6v-3h6v3Zm0-6h6v3h-6v-3Z" />
+                            </svg> Rename</a>
+                        <a href="{% url 'share_file' file.id %}"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                                viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <path
+                                    d="M20 20H4V4h14v4h2v2h-2v2h2v10Zm-4-4h-2v-2h2v2Zm2-6h-2V6h-6v2H8v2H6v2h2v2h2v2h6v-2h2v-2h2v-2Zm-6 0h-2v-2h2v2Zm4 8v-2H6v2h12Zm-6 0H8v-2h2v2Zm4 0v-2H10v2h2Zm-2-6h2v-2h-2v2Zm-2 0v-2h-2v2h2Zm4 6h2v-2h-2v2Z" />
+                            </svg> Share</a>
+                        <form method="POST" action="{% url 'move_to_trash_file' file.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item"
+                                style="background: none; border: none; color: #ff0000; cursor: pointer;">Move to
+                                Trash</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</div>
+
+
+<script>
+    function toggleDropdown(event, id) {
+        event.stopPropagation();
+        var dropdown = document.getElementById('dropdown-' + id);
+        dropdown.style.display = dropdown.style.display === 'none' || !dropdown.style.display ? 'block' : 'none';
+    }
+
+    window.onclick = function (event) {
+        if (!event.target.matches('.three-dot-menu')) {
+            var dropdowns = document.getElementsByClassName('dropdown-menu');
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.style.display === 'block') {
+                    openDropdown.style.display = 'none';
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

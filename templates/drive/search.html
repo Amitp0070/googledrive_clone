@@ -1,0 +1,8 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Search Results - Google Drive Clone{% endblock %}
+
+{% block content %}
+    <h1>Search Results for "{{ query }}"</h1>
+    <div class="row">
+        {% for folder in folders %}

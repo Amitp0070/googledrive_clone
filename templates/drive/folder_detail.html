@@ -1,0 +1,51 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folder Details</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'my_drive' %}">My Drive</a></li>
+                <li><a href="{% url 'trash' %}">Trash</a></li>
+                <!-- Add other navigation items here -->
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>{{ folder.name }}</h1>
+        <p>Created on: {{ folder.created_at }}</p>
+        <p>Last modified: {{ folder.updated_at }}</p>
+
+        <section>
+            <h2>Files in this folder:</h2>
+            <ul>
+                {% for file in folder.files.all %}
+                    <li>
+                        <a href="{% url 'file_detail' id=file.id %}">{{ file.name }}</a>
+                        <!-- Include any additional file details here -->
+                    </li>
+                {% empty %}
+                    <li>No files in this folder.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; {{ current_year }} Your Company</p>
+    </footer>
+</body>
+</html>
+{% endblock %}
+    

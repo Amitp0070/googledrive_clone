@@ -1,0 +1,92 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Trash - Google Drive Clone{% endblock %}
+
+{% block content %}
+<style>
+    .trash-item {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: box-shadow 0.3s ease;
+    }
+    .trash-item:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .trash-item h5 {
+        font-size: 1.125rem;
+        margin: 0;
+        color: #333;
+    }
+    .actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+    .actions button {
+        font-size: 0.875rem;
+        padding: 8px 12px;
+        border-radius: 4px;
+    }
+    .btn-success {
+        background-color: #0aaf00;
+        border: none;
+        color: white;
+    }
+    .btn-success:hover {
+        background-color: #089a00;
+    }
+    .btn-danger {
+        background-color: #d93025;
+        border: none;
+        color: white;
+    }
+    .btn-danger:hover {
+        background-color: #c62828;
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Trash</h1>
+    <div class="row">
+        {% for file in files %}
+        <div class="col-md-3 mb-4 trash-item">
+            <div class="d-flex flex-column justify-content-between h-100">
+                <h5>{{ file.name }}</h5>
+                <div class="actions">
+                    <form method="POST" action="{% url 'restore_file' file.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Restore</button>
+                    </form>
+                    <form method="POST" action="{% url 'delete_file_permanently' file.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% for folder in folders %}
+        <div class="col-md-3 mb-4 trash-item">
+            <div class="d-flex flex-column justify-content-between h-100">
+                <h5>{{ folder.name }}</h5>
+                <div class="actions">
+                    <form method="POST" action="{% url 'restore_folder' folder.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Restore</button>
+                    </form>
+                    <form method="POST" action="{% url 'delete_folder_permanently' folder.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

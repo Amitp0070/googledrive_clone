@@ -1,0 +1,14 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Create Folder - Google Drive Clone{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 3rem;">
+    <h1>Create Folder</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
+{% endblock %}
